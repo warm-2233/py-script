@@ -1,0 +1,2 @@
+image==1.5.33
+XlsxWriter==1.3.7
