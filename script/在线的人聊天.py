@@ -7,7 +7,7 @@
 * 使用 `run_async() <pywebio.session.run_async>` 启动后台协程
 """
 import asyncio
-import bokeh
+
 from pywebio import start_server, run_async
 from pywebio.input import input_group, actions, textarea, input
 from pywebio.output import put_markdown, output, put_scrollable, toast
@@ -23,10 +23,12 @@ online_users = set()  # 在线用户
 async def refresh_msg(my_name, msg_box):
     """刷新聊天消息"""
     global chat_msgs
+    print("---")
     last_idx = len(chat_msgs)
     while True:
         await asyncio.sleep(0.5)
         for m in chat_msgs[last_idx:]:
+            print(m)
             if m[0] != my_name:  # 仅刷新其他人的新信息
                 msg_box.append(put_markdown('`%s`: %s' % m))
 
@@ -42,7 +44,7 @@ async def main():
     和当前所有在线的人聊天
     """
     global chat_msgs
-    run_js("alert('233')")
+    # run_js("alert('233')")
     put_markdown("## PyWebIO聊天室\n欢迎来到聊天室，你可以和当前所有在线的人聊天。你可以在浏览器的多个标签页中打开本页面来测试聊天效果。"
     "本应用使用不到80行代码实现，源代码[链接](https://github.com/wang0618/PyWebIO/blob/dev/demos/chat_room.py)", lstrip=True)
 
@@ -69,8 +71,9 @@ async def main():
         if data is None:
             break
         if data['cmd'] == '多行输入':
-            data['msg'] = '\n' + await textarea('消息内容', help_text='消息内容支持Markdown语法')
+            data['msg'] = '\n' + await textarea('消息内容', help_text='消息内容支持Markdown语法', required=True)
         msg_box.append(put_markdown('`%s`: %s' % (nickname, data['msg']), sanitize=True))
+        msg_box.append(put_markdown(str(chat_msgs), sanitize=True))
         chat_msgs.append((nickname, data['msg']))
 
     refresh_task.close()
