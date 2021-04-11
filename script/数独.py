@@ -61,6 +61,7 @@ def tryInsert(p,sudoku):
 				useTime=t1-t0
 				showSudoku(sudoku)
 				print('\nuse Time: %f s'%(useTime))
+				input()
 				exit()
 			p2=pointList.pop()
 			tryInsert(p2,sudoku)
